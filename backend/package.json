@@ -1,0 +1,49 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node src/index.ts",
+    "build": "tsc",
+    "dev": "nodemon src/index.ts",
+    "insert-json-data": "ts-node src/db/data/insertDataInDb.ts",
+    "predownload-dd-assets": "npm i -D cdragon-dd npm-run-all",
+    "download-dd-assets": "npm-run-all --parallel dd-json",
+    "postdownload-dd-assets": "npm uninstall cdragon-dd npm-run-all",
+    "postpostdownload-dd-assets": "rm out && mkdir out",
+    "dd-json": "cd-dd https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/ -o out/jsons",
+    "dd-champions": "cd-dd -r https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/ -o out/champion-icons",
+    "dd-profiles": "cd-dd -r https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/ -o out/profile-icons",
+    "dd-runes": "cd-dd -r https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perk-images/styles/ -o out/rune-icons",
+    "dd-items": "cd-dd -r https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/items/icons2d/ -o out/item-icons",
+    "dd-roles": "cd-dd -r https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-clash/global/default/assets/images/position-selector/positions/ -o out/role-icons"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.35.2",
+    "express": "^4.21.1",
+    "pg": "^8.13.0",
+    "tsc-alias": "^1.8.10",
+    "tsconfig-paths": "^4.2.0",
+    "twisted": "^1.61.3"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.0",
+    "@types/module-alias": "^2.0.4",
+    "@types/node": "^22.7.8",
+    "@types/pg": "^8.11.10",
+    "drizzle-kit": "^0.26.2",
+    "nodemon": "^3.1.7",
+    "npm-run-all": "^4.1.5",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3"
+  }
+}

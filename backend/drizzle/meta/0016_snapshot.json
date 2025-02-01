@@ -1,0 +1,1582 @@
+{
+  "id": "74ca0997-931a-4673-85ba-920510c3964c",
+  "prevId": "1e87e82f-4ac4-4bcc-b579-3b290ee29641",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.accounts": {
+      "name": "accounts",
+      "schema": "",
+      "columns": {
+        "puuid": {
+          "name": "puuid",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "gameName": {
+          "name": "gameName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tagLine": {
+          "name": "tagLine",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.ban": {
+      "name": "ban",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "teamId": {
+          "name": "teamId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "championId": {
+          "name": "championId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pickTurn": {
+          "name": "pickTurn",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ban_teamId_team_id_fk": {
+          "name": "ban_teamId_team_id_fk",
+          "tableFrom": "ban",
+          "tableTo": "team",
+          "columnsFrom": [
+            "teamId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.items": {
+      "name": "items",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "inStore": {
+          "name": "inStore",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "from": {
+          "name": "from",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "to": {
+          "name": "to",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "categories": {
+          "name": "categories",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "maxStacks": {
+          "name": "maxStacks",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "requiredChampion": {
+          "name": "requiredChampion",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "requiredAlly": {
+          "name": "requiredAlly",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "requiredBuffCurrencyName": {
+          "name": "requiredBuffCurrencyName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "requiredBuffCurrencyCost": {
+          "name": "requiredBuffCurrencyCost",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "specialRecipe": {
+          "name": "specialRecipe",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "isEnchantment": {
+          "name": "isEnchantment",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "price": {
+          "name": "price",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "priceTotal": {
+          "name": "priceTotal",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "displayInItemSets": {
+          "name": "displayInItemSets",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.matches": {
+      "name": "matches",
+      "schema": "",
+      "columns": {
+        "matchId": {
+          "name": "matchId",
+          "type": "varchar(255)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "endOfGameResult": {
+          "name": "endOfGameResult",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gameCreation": {
+          "name": "gameCreation",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gameDuration": {
+          "name": "gameDuration",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gameEndTimestamp": {
+          "name": "gameEndTimestamp",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gameId": {
+          "name": "gameId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gameMode": {
+          "name": "gameMode",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gameName": {
+          "name": "gameName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gameStartTimestamp": {
+          "name": "gameStartTimestamp",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gameType": {
+          "name": "gameType",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gameVersion": {
+          "name": "gameVersion",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mapId": {
+          "name": "mapId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "platformId": {
+          "name": "platformId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "queueId": {
+          "name": "queueId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tournamentCode": {
+          "name": "tournamentCode",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.objective": {
+      "name": "objective",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "teamId": {
+          "name": "teamId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "baronFirst": {
+          "name": "baronFirst",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "baronKills": {
+          "name": "baronKills",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "championFirst": {
+          "name": "championFirst",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "championKills": {
+          "name": "championKills",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dragonFirst": {
+          "name": "dragonFirst",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dragonKills": {
+          "name": "dragonKills",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hordeFirst": {
+          "name": "hordeFirst",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hordeKills": {
+          "name": "hordeKills",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "inhibitorFirst": {
+          "name": "inhibitorFirst",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "inhibitorKills": {
+          "name": "inhibitorKills",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "riftHeraldFirst": {
+          "name": "riftHeraldFirst",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "riftHeraldKills": {
+          "name": "riftHeraldKills",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "towerFirst": {
+          "name": "towerFirst",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "towerKills": {
+          "name": "towerKills",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "objective_teamId_team_id_fk": {
+          "name": "objective_teamId_team_id_fk",
+          "tableFrom": "objective",
+          "tableTo": "team",
+          "columnsFrom": [
+            "teamId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.participants": {
+      "name": "participants",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "matchId": {
+          "name": "matchId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "participantId": {
+          "name": "participantId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "puuid": {
+          "name": "puuid",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "summonerId": {
+          "name": "summonerId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "summonerName": {
+          "name": "summonerName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "teamId": {
+          "name": "teamId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "championId": {
+          "name": "championId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "championName": {
+          "name": "championName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lane": {
+          "name": "lane",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "role": {
+          "name": "role",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "individualPosition": {
+          "name": "individualPosition",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "win": {
+          "name": "win",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "kills": {
+          "name": "kills",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deaths": {
+          "name": "deaths",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "assists": {
+          "name": "assists",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "allInPings": {
+          "name": "allInPings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "assistMePings": {
+          "name": "assistMePings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "baronKills": {
+          "name": "baronKills",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "basicPings": {
+          "name": "basicPings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bountyLevel": {
+          "name": "bountyLevel",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "champExperience": {
+          "name": "champExperience",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "champLevel": {
+          "name": "champLevel",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "championTransform": {
+          "name": "championTransform",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "commandPings": {
+          "name": "commandPings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "consumablesPurchased": {
+          "name": "consumablesPurchased",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "damageDealtToBuildings": {
+          "name": "damageDealtToBuildings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "damageDealtToObjectives": {
+          "name": "damageDealtToObjectives",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "damageDealtToTurrets": {
+          "name": "damageDealtToTurrets",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "damageSelfMitigated": {
+          "name": "damageSelfMitigated",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dangerPings": {
+          "name": "dangerPings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "detectorWardsPlaced": {
+          "name": "detectorWardsPlaced",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "doubleKills": {
+          "name": "doubleKills",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dragonKills": {
+          "name": "dragonKills",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "eligibleForProgression": {
+          "name": "eligibleForProgression",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "enemyMissingPings": {
+          "name": "enemyMissingPings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "enemyVisionPings": {
+          "name": "enemyVisionPings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "firstBloodAssist": {
+          "name": "firstBloodAssist",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "firstBloodKill": {
+          "name": "firstBloodKill",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "firstTowerAssist": {
+          "name": "firstTowerAssist",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "firstTowerKill": {
+          "name": "firstTowerKill",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gameEndedInEarlySurrender": {
+          "name": "gameEndedInEarlySurrender",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gameEndedInSurrender": {
+          "name": "gameEndedInSurrender",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "getBackPings": {
+          "name": "getBackPings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "goldEarned": {
+          "name": "goldEarned",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "goldSpent": {
+          "name": "goldSpent",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "holdPings": {
+          "name": "holdPings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "inhibitorKills": {
+          "name": "inhibitorKills",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "inhibitorTakedowns": {
+          "name": "inhibitorTakedowns",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "inhibitorsLost": {
+          "name": "inhibitorsLost",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "item0": {
+          "name": "item0",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "item1": {
+          "name": "item1",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "item2": {
+          "name": "item2",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "item3": {
+          "name": "item3",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "item4": {
+          "name": "item4",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "item5": {
+          "name": "item5",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "item6": {
+          "name": "item6",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "itemsPurchased": {
+          "name": "itemsPurchased",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "killingSprees": {
+          "name": "killingSprees",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "largestCriticalStrike": {
+          "name": "largestCriticalStrike",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "largestKillingSpree": {
+          "name": "largestKillingSpree",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "largestMultiKill": {
+          "name": "largestMultiKill",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "longestTimeSpentLiving": {
+          "name": "longestTimeSpentLiving",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "magicDamageDealt": {
+          "name": "magicDamageDealt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "magicDamageDealtToChampions": {
+          "name": "magicDamageDealtToChampions",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "magicDamageTaken": {
+          "name": "magicDamageTaken",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "needVisionPings": {
+          "name": "needVisionPings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "neutralMinionsKilled": {
+          "name": "neutralMinionsKilled",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nexusKills": {
+          "name": "nexusKills",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nexusLost": {
+          "name": "nexusLost",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nexusTakedowns": {
+          "name": "nexusTakedowns",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "objectivesStolen": {
+          "name": "objectivesStolen",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "objectivesStolenAssists": {
+          "name": "objectivesStolenAssists",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "onMyWayPings": {
+          "name": "onMyWayPings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pentaKills": {
+          "name": "pentaKills",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "physicalDamageDealt": {
+          "name": "physicalDamageDealt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "physicalDamageDealtToChampions": {
+          "name": "physicalDamageDealtToChampions",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "physicalDamageTaken": {
+          "name": "physicalDamageTaken",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "placement": {
+          "name": "placement",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "playerAugment1": {
+          "name": "playerAugment1",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "playerAugment2": {
+          "name": "playerAugment2",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "playerAugment3": {
+          "name": "playerAugment3",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "playerAugment4": {
+          "name": "playerAugment4",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "playerAugment5": {
+          "name": "playerAugment5",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "playerAugment6": {
+          "name": "playerAugment6",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "playerSubteamId": {
+          "name": "playerSubteamId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "profileIcon": {
+          "name": "profileIcon",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pushPings": {
+          "name": "pushPings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "quadraKills": {
+          "name": "quadraKills",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "riotIdGameName": {
+          "name": "riotIdGameName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "riotIdTagline": {
+          "name": "riotIdTagline",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sightWardsBoughtInGame": {
+          "name": "sightWardsBoughtInGame",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "spell1Casts": {
+          "name": "spell1Casts",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "spell2Casts": {
+          "name": "spell2Casts",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "spell3Casts": {
+          "name": "spell3Casts",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "spell4Casts": {
+          "name": "spell4Casts",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "subteamPlacement": {
+          "name": "subteamPlacement",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "summoner1Casts": {
+          "name": "summoner1Casts",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "summoner1Id": {
+          "name": "summoner1Id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "summoner2Casts": {
+          "name": "summoner2Casts",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "summoner2Id": {
+          "name": "summoner2Id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "teamEarlySurrendered": {
+          "name": "teamEarlySurrendered",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "teamPosition": {
+          "name": "teamPosition",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "timeCCingOthers": {
+          "name": "timeCCingOthers",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "totalAllyJungleMinionsKilled": {
+          "name": "totalAllyJungleMinionsKilled",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "totalDamageDealt": {
+          "name": "totalDamageDealt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "totalDamageDealtToChampions": {
+          "name": "totalDamageDealtToChampions",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "totalDamageShieldedOnTeammates": {
+          "name": "totalDamageShieldedOnTeammates",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "totalDamageTaken": {
+          "name": "totalDamageTaken",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "totalEnemyJungleMinionsKilled": {
+          "name": "totalEnemyJungleMinionsKilled",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "totalHeal": {
+          "name": "totalHeal",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "totalHealsOnTeammates": {
+          "name": "totalHealsOnTeammates",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "totalMinionsKilled": {
+          "name": "totalMinionsKilled",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "totalTimeCCDealt": {
+          "name": "totalTimeCCDealt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "totalTimeSpentDead": {
+          "name": "totalTimeSpentDead",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "totalUnitsHealed": {
+          "name": "totalUnitsHealed",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tripleKills": {
+          "name": "tripleKills",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "trueDamageDealt": {
+          "name": "trueDamageDealt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "trueDamageDealtToChampions": {
+          "name": "trueDamageDealtToChampions",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "trueDamageTaken": {
+          "name": "trueDamageTaken",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "turretKills": {
+          "name": "turretKills",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "turretTakedowns": {
+          "name": "turretTakedowns",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "turretsLost": {
+          "name": "turretsLost",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "unrealKills": {
+          "name": "unrealKills",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "visionClearedPings": {
+          "name": "visionClearedPings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "visionScore": {
+          "name": "visionScore",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "visionWardsBoughtInGame": {
+          "name": "visionWardsBoughtInGame",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "wardsKilled": {
+          "name": "wardsKilled",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "wardsPlaced": {
+          "name": "wardsPlaced",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "participants_matchId_matches_matchId_fk": {
+          "name": "participants_matchId_matches_matchId_fk",
+          "tableFrom": "participants",
+          "tableTo": "matches",
+          "columnsFrom": [
+            "matchId"
+          ],
+          "columnsTo": [
+            "matchId"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "participants_item0_items_id_fk": {
+          "name": "participants_item0_items_id_fk",
+          "tableFrom": "participants",
+          "tableTo": "items",
+          "columnsFrom": [
+            "item0"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "participants_item1_items_id_fk": {
+          "name": "participants_item1_items_id_fk",
+          "tableFrom": "participants",
+          "tableTo": "items",
+          "columnsFrom": [
+            "item1"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "participants_item2_items_id_fk": {
+          "name": "participants_item2_items_id_fk",
+          "tableFrom": "participants",
+          "tableTo": "items",
+          "columnsFrom": [
+            "item2"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "participants_item3_items_id_fk": {
+          "name": "participants_item3_items_id_fk",
+          "tableFrom": "participants",
+          "tableTo": "items",
+          "columnsFrom": [
+            "item3"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "participants_item4_items_id_fk": {
+          "name": "participants_item4_items_id_fk",
+          "tableFrom": "participants",
+          "tableTo": "items",
+          "columnsFrom": [
+            "item4"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "participants_item5_items_id_fk": {
+          "name": "participants_item5_items_id_fk",
+          "tableFrom": "participants",
+          "tableTo": "items",
+          "columnsFrom": [
+            "item5"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "participants_item6_items_id_fk": {
+          "name": "participants_item6_items_id_fk",
+          "tableFrom": "participants",
+          "tableTo": "items",
+          "columnsFrom": [
+            "item6"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.perkNames": {
+      "name": "perkNames",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "majorChangePatchVersion": {
+          "name": "majorChangePatchVersion",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "endOfGameStatDescs": {
+          "name": "endOfGameStatDescs",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.perkSelections": {
+      "name": "perkSelections",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "perkStyleId": {
+          "name": "perkStyleId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "perk": {
+          "name": "perk",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "var1": {
+          "name": "var1",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "var2": {
+          "name": "var2",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "var3": {
+          "name": "var3",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "perkSelections_perkStyleId_perkStyles_id_fk": {
+          "name": "perkSelections_perkStyleId_perkStyles_id_fk",
+          "tableFrom": "perkSelections",
+          "tableTo": "perkStyles",
+          "columnsFrom": [
+            "perkStyleId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "perkSelections_perk_perkNames_id_fk": {
+          "name": "perkSelections_perk_perkNames_id_fk",
+          "tableFrom": "perkSelections",
+          "tableTo": "perkNames",
+          "columnsFrom": [
+            "perk"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.perkStyles": {
+      "name": "perkStyles",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "perksId": {
+          "name": "perksId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "style": {
+          "name": "style",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "perkStyles_perksId_perks_id_fk": {
+          "name": "perkStyles_perksId_perks_id_fk",
+          "tableFrom": "perkStyles",
+          "tableTo": "perks",
+          "columnsFrom": [
+            "perksId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.perks": {
+      "name": "perks",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "participantId": {
+          "name": "participantId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "defense": {
+          "name": "defense",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "flex": {
+          "name": "flex",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "offense": {
+          "name": "offense",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "perks_participantId_participants_id_fk": {
+          "name": "perks_participantId_participants_id_fk",
+          "tableFrom": "perks",
+          "tableTo": "participants",
+          "columnsFrom": [
+            "participantId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.team": {
+      "name": "team",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "matchId": {
+          "name": "matchId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "teamId": {
+          "name": "teamId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "win": {
+          "name": "win",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "team_matchId_matches_matchId_fk": {
+          "name": "team_matchId_matches_matchId_fk",
+          "tableFrom": "team",
+          "tableTo": "matches",
+          "columnsFrom": [
+            "matchId"
+          ],
+          "columnsTo": [
+            "matchId"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

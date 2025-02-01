@@ -1,0 +1,1 @@
+ALTER TABLE "perkNames" ADD COLUMN "endOfGameStatDescs" json;

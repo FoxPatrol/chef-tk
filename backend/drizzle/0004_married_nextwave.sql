@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS "items" (
+	"id" integer PRIMARY KEY NOT NULL,
+	"name" varchar(255),
+	"description" varchar(255),
+	"active" boolean,
+	"inStore" boolean,
+	"from" json,
+	"to" json,
+	"categories" json,
+	"maxStacks" integer,
+	"requiredChampion" varchar(255),
+	"requiredAlly" varchar(255),
+	"requiredBuffCurrencyName" varchar(255),
+	"requiredBuffCurrencyCost" integer,
+	"specialRecipe" integer,
+	"isEnchantment" boolean,
+	"price" integer,
+	"priceTotal" integer,
+	"displayInItemSets" boolean
+);
