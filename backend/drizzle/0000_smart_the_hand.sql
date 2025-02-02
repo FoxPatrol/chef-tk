@@ -1,3 +1,9 @@
+CREATE TABLE IF NOT EXISTS "accounts" (
+	"puuid" text PRIMARY KEY NOT NULL,
+	"gameName" text NOT NULL,
+	"tagLine" text NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "ban" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"teamId" integer,
@@ -5,28 +11,42 @@ CREATE TABLE IF NOT EXISTS "ban" (
 	"pickTurn" integer
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "info" (
+CREATE TABLE IF NOT EXISTS "items" (
+	"id" integer PRIMARY KEY NOT NULL,
+	"name" varchar(255),
+	"active" boolean,
+	"inStore" boolean,
+	"from" json,
+	"to" json,
+	"categories" json,
+	"maxStacks" integer,
+	"requiredChampion" varchar(255),
+	"requiredAlly" varchar(255),
+	"requiredBuffCurrencyName" varchar(255),
+	"requiredBuffCurrencyCost" integer,
+	"specialRecipe" integer,
+	"isEnchantment" boolean,
+	"price" integer,
+	"priceTotal" integer,
+	"displayInItemSets" boolean
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "matches" (
 	"matchId" varchar(255) PRIMARY KEY NOT NULL,
 	"endOfGameResult" varchar(255),
-	"gameCreation" integer,
+	"gameCreation" bigint,
 	"gameDuration" integer,
-	"gameEndTimestamp" integer,
-	"gameId" integer,
+	"gameEndTimestamp" bigint,
+	"gameId" bigint,
 	"gameMode" varchar(255),
 	"gameName" varchar(255),
-	"gameStartTimestamp" integer,
+	"gameStartTimestamp" bigint,
 	"gameType" varchar(255),
 	"gameVersion" varchar(255),
 	"mapId" integer,
 	"platformId" varchar(255),
 	"queueId" integer,
 	"tournamentCode" varchar(255)
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "legendaryItemUsed" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"participantId" integer,
-	"itemId" integer
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "objective" (
@@ -48,7 +68,7 @@ CREATE TABLE IF NOT EXISTS "objective" (
 	"towerKills" integer
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "participant" (
+CREATE TABLE IF NOT EXISTS "participants" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"matchId" varchar(255),
 	"participantId" integer,
@@ -180,6 +200,13 @@ CREATE TABLE IF NOT EXISTS "participant" (
 	"wardsPlaced" integer
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "perkNames" (
+	"id" integer PRIMARY KEY NOT NULL,
+	"name" varchar(255),
+	"majorChangePatchVersion" varchar(10),
+	"endOfGameStatDescs" json
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "perkSelections" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"perkStyleId" integer,
@@ -212,49 +239,97 @@ CREATE TABLE IF NOT EXISTS "team" (
 );
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "ban" ADD CONSTRAINT "ban_teamId_team_id_fk" FOREIGN KEY ("teamId") REFERENCES "public"."team"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "ban" ADD CONSTRAINT "ban_teamId_team_id_fk" FOREIGN KEY ("teamId") REFERENCES "public"."team"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "legendaryItemUsed" ADD CONSTRAINT "legendaryItemUsed_participantId_participant_id_fk" FOREIGN KEY ("participantId") REFERENCES "public"."participant"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "objective" ADD CONSTRAINT "objective_teamId_team_id_fk" FOREIGN KEY ("teamId") REFERENCES "public"."team"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "objective" ADD CONSTRAINT "objective_teamId_team_id_fk" FOREIGN KEY ("teamId") REFERENCES "public"."team"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "participants" ADD CONSTRAINT "participants_matchId_matches_matchId_fk" FOREIGN KEY ("matchId") REFERENCES "public"."matches"("matchId") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "participant" ADD CONSTRAINT "participant_matchId_info_matchId_fk" FOREIGN KEY ("matchId") REFERENCES "public"."info"("matchId") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "participants" ADD CONSTRAINT "participants_puuid_accounts_puuid_fk" FOREIGN KEY ("puuid") REFERENCES "public"."accounts"("puuid") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "perkSelections" ADD CONSTRAINT "perkSelections_perkStyleId_perkStyles_id_fk" FOREIGN KEY ("perkStyleId") REFERENCES "public"."perkStyles"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "participants" ADD CONSTRAINT "participants_item0_items_id_fk" FOREIGN KEY ("item0") REFERENCES "public"."items"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "perkStyles" ADD CONSTRAINT "perkStyles_perksId_perks_id_fk" FOREIGN KEY ("perksId") REFERENCES "public"."perks"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "participants" ADD CONSTRAINT "participants_item1_items_id_fk" FOREIGN KEY ("item1") REFERENCES "public"."items"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "perks" ADD CONSTRAINT "perks_participantId_participant_id_fk" FOREIGN KEY ("participantId") REFERENCES "public"."participant"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "participants" ADD CONSTRAINT "participants_item2_items_id_fk" FOREIGN KEY ("item2") REFERENCES "public"."items"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "team" ADD CONSTRAINT "team_matchId_info_matchId_fk" FOREIGN KEY ("matchId") REFERENCES "public"."info"("matchId") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "participants" ADD CONSTRAINT "participants_item3_items_id_fk" FOREIGN KEY ("item3") REFERENCES "public"."items"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "participants" ADD CONSTRAINT "participants_item4_items_id_fk" FOREIGN KEY ("item4") REFERENCES "public"."items"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "participants" ADD CONSTRAINT "participants_item5_items_id_fk" FOREIGN KEY ("item5") REFERENCES "public"."items"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "participants" ADD CONSTRAINT "participants_item6_items_id_fk" FOREIGN KEY ("item6") REFERENCES "public"."items"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "perkSelections" ADD CONSTRAINT "perkSelections_perkStyleId_perkStyles_id_fk" FOREIGN KEY ("perkStyleId") REFERENCES "public"."perkStyles"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "perkSelections" ADD CONSTRAINT "perkSelections_perk_perkNames_id_fk" FOREIGN KEY ("perk") REFERENCES "public"."perkNames"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "perkStyles" ADD CONSTRAINT "perkStyles_perksId_perks_id_fk" FOREIGN KEY ("perksId") REFERENCES "public"."perks"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "perks" ADD CONSTRAINT "perks_participantId_participants_id_fk" FOREIGN KEY ("participantId") REFERENCES "public"."participants"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "team" ADD CONSTRAINT "team_matchId_matches_matchId_fk" FOREIGN KEY ("matchId") REFERENCES "public"."matches"("matchId") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

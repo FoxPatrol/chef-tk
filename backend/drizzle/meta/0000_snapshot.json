@@ -1,6 +1,6 @@
 {
-  "id": "cf0bcfdb-2772-4c98-85cc-7610a4c834c7",
-  "prevId": "9a58e351-bf50-430d-8f8b-8e7de3893dc7",
+  "id": "b9333c42-0627-441d-a681-d6f9cc480b71",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -18,13 +18,13 @@
           "name": "gameName",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "tagLine": {
           "name": "tagLine",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
@@ -74,7 +74,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -409,7 +409,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1208,6 +1208,19 @@
           "columnsTo": [
             "matchId"
           ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "participants_puuid_accounts_puuid_fk": {
+          "name": "participants_puuid_accounts_puuid_fk",
+          "tableFrom": "participants",
+          "tableTo": "accounts",
+          "columnsFrom": [
+            "puuid"
+          ],
+          "columnsTo": [
+            "puuid"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1395,7 +1408,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "perkSelections_perk_perkNames_id_fk": {
@@ -1457,7 +1470,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1512,7 +1525,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1561,7 +1574,7 @@
           "columnsTo": [
             "matchId"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
