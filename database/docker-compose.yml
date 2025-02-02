@@ -1,11 +1,9 @@
-version: "3.8"
-
 volumes:
   pg_data:
 
 services:
-  postgres:
-    image: cook-book
+  cook-book:
+    image: postgres:17
     container_name: cook-book
     environment:
       POSTGRES_USER: postgres
