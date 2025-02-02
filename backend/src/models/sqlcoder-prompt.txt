@@ -1,0 +1,402 @@
+""" 
+### Instructions:
+Your task is to convert a question into a SQL query, given a Postgres database schema.
+Adhere to these rules:
+- **Deliberately go through the question and database schema word by word** to appropriately answer the question
+- **Use Table Aliases** to prevent ambiguity. For example, `SELECT table1.col1, table2.col1 FROM table1 JOIN table2 ON table1.id = table2.id`.
+- When creating a ratio, always cast the numerator as float
+
+### Input:
+Generate a SQL query that answers the question `What items are required to build plated steelcaps?`.
+This query will run on a database whose schema is represented in this string:
+
+CREATE TABLE IF NOT EXISTS "accounts" (
+	"puuid" text PRIMARY KEY NOT NULL, -- Unique identifier for each account
+	"gameName" text NOT NULL, -- In-game name of the account
+	"tagLine" text NOT NULL -- Tagline associated with the game name
+);
+
+CREATE TABLE IF NOT EXISTS "ban" (
+	"id" serial PRIMARY KEY NOT NULL, -- Unique ID for each ban entry
+	"teamId" integer, -- ID of the team that issued the ban
+	"championId" integer, -- ID of the champion that was banned
+	"pickTurn" integer -- Turn order when the champion was banned
+);
+
+CREATE TABLE IF NOT EXISTS "items" (
+	"id" integer PRIMARY KEY NOT NULL, -- Unique ID for each item
+	"name" varchar(255), -- Name of the item
+	"active" boolean, -- Whether the item has an active ability
+	"inStore" boolean, -- Whether the item is available in the store
+	"from" json, -- JSON array of items this item builds from
+	"to" json, -- JSON array of items this item builds into
+	"categories" json, -- JSON array of item categories
+	"maxStacks" integer, -- Maximum stack count of the item
+	"requiredChampion" varchar(255), -- Specific champion required to use the item
+	"requiredAlly" varchar(255), -- Specific ally required to use the item
+	"requiredBuffCurrencyName" varchar(255), -- Name of the buff currency required for the item
+	"requiredBuffCurrencyCost" integer, -- Cost of the buff currency required for the item
+	"specialRecipe" integer, -- ID of the special recipe if applicable
+	"isEnchantment" boolean, -- Whether the item is an enchantment
+	"price" integer, -- Base price of the item
+	"priceTotal" integer, -- Total price including combined costs
+	"displayInItemSets" boolean -- Whether the item is displayed in custom item sets
+);
+
+CREATE TABLE IF NOT EXISTS "matches" (
+	"matchId" varchar(255) PRIMARY KEY NOT NULL, -- Unique ID for each match
+	"endOfGameResult" varchar(255), -- Result of the game (e.g., GameComplete)
+	"gameCreation" bigint, -- Timestamp when the game was created
+	"gameDuration" integer, -- Duration of the game in seconds
+	"gameEndTimestamp" bigint, -- Timestamp when the game ended
+	"gameId" bigint, -- Unique game ID
+	"gameMode" varchar(255), -- Game mode (e.g., CLASSIC, ARAM)
+	"gameName" varchar(255), -- Name of the game session
+	"gameStartTimestamp" bigint, -- Timestamp when the game started
+	"gameType" varchar(255), -- Type of game (e.g., MATCHED_GAME)
+	"gameVersion" varchar(255), -- Version of the game client used
+	"mapId" integer, -- ID of the map the game was played on
+	"platformId" varchar(255), -- Platform ID (e.g., NA1, EUW1)
+	"queueId" integer, -- ID of the matchmaking queue
+	"tournamentCode" varchar(255) -- Code for tournament matches if applicable
+);
+
+CREATE TABLE IF NOT EXISTS "objective" (
+	"id" serial PRIMARY KEY NOT NULL, -- Unique ID for each objective entry
+	"teamId" integer, -- ID of the team
+	"baronFirst" boolean, -- Whether the team secured first Baron
+	"baronKills" integer, -- Number of Barons killed
+	"championFirst" boolean, -- Whether the team secured first champion kill
+	"championKills" integer, -- Number of champion kills
+	"dragonFirst" boolean, -- Whether the team secured first Dragon
+	"dragonKills" integer, -- Number of Dragons killed
+	"hordeFirst" boolean, -- Whether the team secured first Horde
+	"hordeKills" integer, -- Number of Horde kills
+	"inhibitorFirst" boolean, -- Whether the team secured first Inhibitor
+	"inhibitorKills" integer, -- Number of Inhibitors destroyed
+	"riftHeraldFirst" boolean, -- Whether the team secured first Rift Herald
+	"riftHeraldKills" integer, -- Number of Rift Heralds killed
+	"towerFirst" boolean, -- Whether the team secured first Tower
+	"towerKills" integer -- Number of Towers destroyed
+);
+
+CREATE TABLE IF NOT EXISTS "participants" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"matchId" varchar(255),
+	"participantId" integer,
+	"puuid" varchar(255),
+	"summonerId" varchar(255),
+	"summonerName" varchar(255),
+	"teamId" integer,
+	"championId" integer,
+	"championName" varchar(255),
+	"lane" varchar(255),
+	"role" varchar(255),
+	"individualPosition" varchar(255),
+	"win" boolean,
+	"kills" integer,
+	"deaths" integer,
+	"assists" integer,
+	"allInPings" integer,
+	"assistMePings" integer,
+	"baronKills" integer,
+	"basicPings" integer,
+	"bountyLevel" integer,
+	"champExperience" integer,
+	"champLevel" integer,
+	"championTransform" integer,
+	"commandPings" integer,
+	"consumablesPurchased" integer,
+	"damageDealtToBuildings" integer,
+	"damageDealtToObjectives" integer,
+	"damageDealtToTurrets" integer,
+	"damageSelfMitigated" integer,
+	"dangerPings" integer,
+	"detectorWardsPlaced" integer,
+	"doubleKills" integer,
+	"dragonKills" integer,
+	"eligibleForProgression" boolean,
+	"enemyMissingPings" integer,
+	"enemyVisionPings" integer,
+	"firstBloodAssist" boolean,
+	"firstBloodKill" boolean,
+	"firstTowerAssist" boolean,
+	"firstTowerKill" boolean,
+	"gameEndedInEarlySurrender" boolean,
+	"gameEndedInSurrender" boolean,
+	"getBackPings" integer,
+	"goldEarned" integer,
+	"goldSpent" integer,
+	"holdPings" integer,
+	"inhibitorKills" integer,
+	"inhibitorTakedowns" integer,
+	"inhibitorsLost" integer,
+	"item0" integer,
+	"item1" integer,
+	"item2" integer,
+	"item3" integer,
+	"item4" integer,
+	"item5" integer,
+	"item6" integer,
+	"itemsPurchased" integer,
+	"killingSprees" integer,
+	"largestCriticalStrike" integer,
+	"largestKillingSpree" integer,
+	"largestMultiKill" integer,
+	"longestTimeSpentLiving" integer,
+	"magicDamageDealt" integer,
+	"magicDamageDealtToChampions" integer,
+	"magicDamageTaken" integer,
+	"needVisionPings" integer,
+	"neutralMinionsKilled" integer,
+	"nexusKills" integer,
+	"nexusLost" integer,
+	"nexusTakedowns" integer,
+	"objectivesStolen" integer,
+	"objectivesStolenAssists" integer,
+	"onMyWayPings" integer,
+	"pentaKills" integer,
+	"physicalDamageDealt" integer,
+	"physicalDamageDealtToChampions" integer,
+	"physicalDamageTaken" integer,
+	"placement" integer,
+	"playerAugment1" integer,
+	"playerAugment2" integer,
+	"playerAugment3" integer,
+	"playerAugment4" integer,
+	"playerAugment5" integer,
+	"playerAugment6" integer,
+	"playerSubteamId" integer,
+	"profileIcon" integer,
+	"pushPings" integer,
+	"quadraKills" integer,
+	"riotIdGameName" varchar(255),
+	"riotIdTagline" varchar(255),
+	"sightWardsBoughtInGame" integer,
+	"spell1Casts" integer,
+	"spell2Casts" integer,
+	"spell3Casts" integer,
+	"spell4Casts" integer,
+	"subteamPlacement" integer,
+	"summoner1Casts" integer,
+	"summoner1Id" integer,
+	"summoner2Casts" integer,
+	"summoner2Id" integer,
+	"teamEarlySurrendered" boolean,
+	"teamPosition" varchar(255),
+	"timeCCingOthers" integer,
+	"totalAllyJungleMinionsKilled" integer,
+	"totalDamageDealt" integer,
+	"totalDamageDealtToChampions" integer,
+	"totalDamageShieldedOnTeammates" integer,
+	"totalDamageTaken" integer,
+	"totalEnemyJungleMinionsKilled" integer,
+	"totalHeal" integer,
+	"totalHealsOnTeammates" integer,
+	"totalMinionsKilled" integer,
+	"totalTimeCCDealt" integer,
+	"totalTimeSpentDead" integer,
+	"totalUnitsHealed" integer,
+	"tripleKills" integer,
+	"trueDamageDealt" integer,
+	"trueDamageDealtToChampions" integer,
+	"trueDamageTaken" integer,
+	"turretKills" integer,
+	"turretTakedowns" integer,
+	"turretsLost" integer,
+	"unrealKills" integer,
+	"visionClearedPings" integer,
+	"visionScore" integer,
+	"visionWardsBoughtInGame" integer,
+	"wardsKilled" integer,
+	"wardsPlaced" integer
+);
+
+CREATE TABLE IF NOT EXISTS "participants" (
+    "id" serial PRIMARY KEY NOT NULL, -- Unique ID for each participant
+    "matchId" varchar(255), -- ID of the match the participant belongs to
+    "participantId" integer, -- ID of the participant in the match
+    "puuid" varchar(255), -- Unique identifier for the participant
+    "summonerId" varchar(255), -- Summoner ID of the participant
+    "summonerName" varchar(255), -- Summoner name of the participant
+    "teamId" integer, -- Team ID of the participant
+    "championId" integer, -- Champion ID used by the participant
+    "championName" varchar(255), -- Champion name used by the participant
+    "lane" varchar(255), -- Lane the participant played in (TOP, JUNGLE, BOTTOM, MIDDLE)
+    "role" varchar(255), -- Role the participant played (NONE, DUO, CARRY, SUPPORT, SOLO)
+    "individualPosition" varchar(255), -- Role assigned to the participant (TOP, JUNGLE, BOTTOM, MIDDLE, UTILITY)
+    "win" boolean, -- Whether the participant won the match
+    "kills" integer, -- Number of kills by the participant
+    "deaths" integer, -- Number of times the participant died
+    "assists" integer, -- Number of assists by the participant
+    "allInPings" integer, -- Number of all-in pings used by the participant
+    "assistMePings" integer, -- Number of assist-me pings used
+    "baronKills" integer, -- Number of Baron kills secured by the participant
+    "basicPings" integer, -- Number of basic pings used
+    "bountyLevel" integer, -- Bounty level on the participant
+    "champExperience" integer, -- Total experience gained by the champion
+    "champLevel" integer, -- Level of the champion in the match
+    "championTransform" integer, -- Transform state of the champion (for champions like Kayn)
+    "commandPings" integer, -- Number of command pings used
+    "consumablesPurchased" integer, -- Number of consumables purchased
+    "damageDealtToBuildings" integer, -- Total damage dealt to buildings
+    "damageDealtToObjectives" integer, -- Total damage dealt to objectives
+    "damageDealtToTurrets" integer, -- Total damage dealt to turrets
+    "damageSelfMitigated" integer, -- Total damage mitigated by the participant
+    "dangerPings" integer, -- Number of danger pings used
+    "detectorWardsPlaced" integer, -- Number of detector wards placed
+    "doubleKills" integer, -- Number of double kills achieved
+    "dragonKills" integer, -- Number of dragons killed
+    "eligibleForProgression" boolean, -- Whether the participant is eligible for progression
+    "enemyMissingPings" integer, -- Number of enemy missing pings used
+    "enemyVisionPings" integer, -- Number of enemy vision pings used
+    "firstBloodAssist" boolean, -- Whether the participant assisted in first blood
+    "firstBloodKill" boolean, -- Whether the participant secured first blood
+    "firstTowerAssist" boolean, -- Whether the participant assisted in first tower takedown
+    "firstTowerKill" boolean, -- Whether the participant secured first tower takedown
+    "gameEndedInEarlySurrender" boolean, -- Whether the game ended in an early surrender
+    "gameEndedInSurrender" boolean, -- Whether the game ended in surrender
+    "getBackPings" integer, -- Number of get-back pings used
+    "goldEarned" integer, -- Total gold earned by the participant
+    "goldSpent" integer, -- Total gold spent by the participant
+    "holdPings" integer, -- Number of hold pings used
+    "inhibitorKills" integer, -- Number of inhibitors destroyed
+    "inhibitorTakedowns" integer, -- Number of inhibitors taken down
+    "inhibitorsLost" integer, -- Number of inhibitors lost
+    "item0" integer, -- Id of Item in slot 0
+    "item1" integer, -- Id of Item in slot 1
+    "item2" integer, -- Id of Item in slot 2
+    "item3" integer, -- Id of Item in slot 3
+    "item4" integer, -- Id of Item in slot 4
+    "item5" integer, -- Id of Item in slot 5
+    "item6" integer, -- Id of Trinket item slot
+    "itemsPurchased" integer, -- Total items purchased
+    "killingSprees" integer, -- Number of killing sprees
+    "largestCriticalStrike" integer, -- Largest critical strike dealt
+    "largestKillingSpree" integer, -- Largest killing spree achieved
+    "largestMultiKill" integer, -- Largest multi-kill achieved
+    "longestTimeSpentLiving" integer, -- Longest time spent alive without dying
+    "magicDamageDealt" integer, -- Total magic damage dealt
+    "magicDamageDealtToChampions" integer, -- Magic damage dealt to champions
+    "magicDamageTaken" integer, -- Magic damage taken
+    "needVisionPings" integer, -- Number of need vision pings used
+    "neutralMinionsKilled" integer, -- Number of neutral minions killed
+    "nexusKills" integer, -- Number of Nexus kills secured
+    "nexusLost" integer, -- Whether the Nexus was lost
+    "nexusTakedowns" integer, -- Number of Nexus takedowns
+    "objectivesStolen" integer, -- Number of objectives stolen
+    "objectivesStolenAssists" integer, -- Number of assists on stolen objectives
+    "onMyWayPings" integer, -- Number of on-my-way pings used
+    "pentaKills" integer, -- Number of pentakills achieved
+    "physicalDamageDealt" integer, -- Total physical damage dealt
+    "physicalDamageDealtToChampions" integer, -- Physical damage dealt to champions
+    "physicalDamageTaken" integer, -- Physical damage taken
+    "placement" integer, -- Placement in ranking games
+    "playerAugment1" integer, -- Augment 1 used by the player
+    "playerAugment2" integer, -- Augment 2 used by the player
+    "playerAugment3" integer, -- Augment 3 used by the player
+    "playerAugment4" integer, -- Augment 4 used by the player
+    "profileIcon" integer, -- Profile icon ID of the player
+    "pushPings" integer, -- Number of push pings used
+    "quadraKills" integer, -- Number of quadrakills achieved
+    "riotIdGameName" varchar(255), -- Riot ID game name
+    "riotIdTagline" varchar(255), -- Riot ID tagline
+    "sightWardsBoughtInGame" integer, -- Sight wards purchased in-game
+    "spell1Casts" integer, -- Number of times spell 1 was cast
+    "spell2Casts" integer, -- Number of times spell 2 was cast
+    "spell3Casts" integer, -- Number of times spell 3 was cast
+    "spell4Casts" integer, -- Number of times spell 4 was cast
+    "summoner1Casts" integer, -- Number of times summoner spell 1 was cast
+    "summoner1Id" integer, -- Summoner spell 1 ID
+    "summoner2Casts" integer, -- Number of times summoner spell 2 was cast
+    "summoner2Id" integer, -- Summoner spell 2 ID
+    "teamEarlySurrendered" boolean, -- Whether the team surrendered early
+    "teamPosition" varchar(255), -- Position within the team (TOP, JUNGLE, MID, BOTTOM, UTILITY)
+    "timeCCingOthers" integer, -- Total time spent crowd controlling others (seconds)
+	"totalAllyJungleMinionsKilled" integer, -- Total number of jungle minions killed in ally's jungle
+	"totalDamageDealt" integer, -- Total amount of damage dealt by the player
+	"totalDamageDealtToChampions" integer, -- Total damage dealt to enemy champions
+	"totalDamageShieldedOnTeammates" integer, -- Total amount of damage shielded on allies
+	"totalDamageTaken" integer, -- Total amount of damage taken by the player
+	"totalEnemyJungleMinionsKilled" integer, -- Total number of jungle minions killed in enemy's jungle
+	"totalHeal" integer, -- Total amount of health healed by the player
+	"totalHealsOnTeammates" integer, -- Total amount of health healed on allies
+	"totalMinionsKilled" integer, -- Total number of minions killed by the player
+	"totalTimeCCDealt" integer, -- Total time the player applied crowd control (CC) to enemies
+	"totalTimeSpentDead" integer, -- Total time the player spent dead during the game
+	"totalUnitsHealed" integer, -- Total number of units (champions or minions) healed
+	"tripleKills" integer, -- Total number of triple kills achieved by the player
+	"trueDamageDealt" integer, -- Total true damage dealt by the player
+	"trueDamageDealtToChampions" integer, -- Total true damage dealt to enemy champions
+	"trueDamageTaken" integer, -- Total true damage taken by the player
+	"turretKills" integer, -- Total number of turrets destroyed by the player
+	"turretTakedowns" integer, -- Total number of turrets destroyed by the team
+	"turretsLost" integer, -- Total number of turrets lost by the player's team
+	"unrealKills" integer, -- Total number of unreal kills (killing spree of 4 or more) achieved by the player
+	"visionClearedPings" integer, -- Total number of vision-clearing pings made by the player
+	"visionScore" integer, -- Total vision score of the player (vision control in the game)
+	"visionWardsBoughtInGame" integer, -- Total number of vision wards bought during the game
+	"wardsKilled" integer, -- Total number of wards killed by the player
+	"wardsPlaced" integer -- Total number of wards placed by the player
+);
+
+CREATE TABLE IF NOT EXISTS "perkNames" (
+	"id" integer PRIMARY KEY NOT NULL, -- Unique ID for each perk
+	"name" varchar(255), -- Name of the perk
+	"majorChangePatchVersion" varchar(10), -- Patch version when perk changed significantly
+	"endOfGameStatDescs" json -- JSON description of end-of-game statistics
+);
+
+CREATE TABLE IF NOT EXISTS "perkSelections" (
+	"id" serial PRIMARY KEY NOT NULL, -- Unique ID for each perk selection
+	"perkStyleId" integer, -- Style ID of the perk
+	"perk" integer, -- ID of the selected perk
+	"var1" integer, -- First variable for perk effects
+	"var2" integer, -- Second variable for perk effects
+	"var3" integer -- Third variable for perk effects
+);
+
+CREATE TABLE IF NOT EXISTS "perkStyles" (
+	"id" serial PRIMARY KEY NOT NULL, -- Unique ID for each perk style
+	"perksId" integer, -- ID of the perk group
+	"description" varchar(255), -- Description of the perk style
+	"style" integer -- ID representing the perk style
+);
+
+CREATE TABLE IF NOT EXISTS "perks" (
+	"id" serial PRIMARY KEY NOT NULL, -- Unique ID for each perks entry
+	"participantId" integer, -- Participant ID associated with perks
+	"defense" integer, -- Defensive perk id
+	"flex" integer, -- Flex perk id
+	"offense" integer -- Offensive perk id
+);
+
+CREATE TABLE IF NOT EXISTS "team" (
+	"id" serial PRIMARY KEY NOT NULL, -- Unique ID for each team entry
+	"matchId" varchar(255), -- ID of the match the team belongs to
+	"teamId" integer, -- ID of the team in the match
+	"win" boolean -- Whether the team won the match
+);
+
+-- ban.teamId can be joined with team.id
+-- objective.teamId can be joined with team.id
+-- participants.matchId can be joined with matches.matchId
+-- participants.puuid can be joined with accounts.puuid
+-- participants.item0 can be joined with items.id
+-- participants.item1 can be joined with items.id
+-- participants.item2 can be joined with items.id
+-- participants.item3 can be joined with items.id
+-- participants.item4 can be joined with items.id
+-- participants.item5 can be joined with items.id
+-- participants.item6 can be joined with items.id
+-- perkSelections.perkStyleId can be joined with perkStyles.id
+-- perkSelections.perk can be joined with perkNames.id
+-- perkStyles.perksId can be joined with perks.id
+-- perks.participantId can be joined with participants.id
+-- team.matchId can be joined with matches.matchId
+
+
+### Response:
+Based on your instructions, here is the SQL query I have generated to answer the question `What items are required to build plated steelcaps?`:
+```sql
+"""
