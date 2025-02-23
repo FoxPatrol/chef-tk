@@ -30,12 +30,13 @@ const generationConfig: GenerationConfig = {
   topP: 0.95,
   topK: 32,
   maxOutputTokens: 8192,
-  responseMimeType: "application/json",
+  //responseMimeType: "application/json",
   responseSchema: responseSchema,
 };
 
 export const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-pro",
+  //model: "gemini-1.5-pro",
+  model: "gemini-2.0-flash-thinking-exp-01-21",
   generationConfig,
 });
 

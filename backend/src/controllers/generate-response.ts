@@ -1,7 +1,9 @@
 import DatabaseConnector from "@db/connector";
 import { getSchemaContents } from "@db/helperFunctions";
+import { model } from "@models/gemini";
 import { Request, Response } from "express";
-import { model } from "models/gemini";
+
+const queryErrorRetries = 3;
 
 class GenerateResponseController {
   postGenerateResponse = async (req: Request, res: Response): Promise<any> => {
@@ -25,22 +27,55 @@ class GenerateResponseController {
       const schema = await getSchemaContents();
       const fullPrompt = this.constructPrompt(schema, prompt, extra);
 
-      const result = await model.generateContent(fullPrompt);
+      //const result = await model.generateContent(fullPrompt);
+      const session = model.startChat();
+      let result = await session.sendMessage(fullPrompt);
 
-      // Extract the response and send it back
       const responseText = result.response.text();
       console.log({ responseText });
 
-      let sqlQuery: string = JSON.parse(responseText || "").command;
+      //let sqlQuery: string = JSON.parse(responseText || "").command;
+      let sqlQuery: string = responseText;
       sqlQuery = this.removeInnerSingleQuotes(sqlQuery);
       sqlQuery = this.removeCodeFencing(sqlQuery);
+      sqlQuery = this.replaceDoubleBackslashesForSingleBackslashes(sqlQuery);
+      sqlQuery = this.replaceDoubleQuoteForSingleQuote(sqlQuery);
       console.log({ sqlQuery });
 
       const connector = DatabaseConnector.getInstance();
       await connector.connect();
-      const response = await connector.query(sqlQuery);
 
-      return res.status(200).send({ response });
+      let response: any[] | null = null;
+      for (let index = 0; index < queryErrorRetries; index++) {
+        console.log({ try: index });
+        try {
+          response = await connector.query(sqlQuery);
+          break;
+        } catch (error: any) {
+          const fullErrorMessage = String(error);
+          console.log({ fullErrorMessage });
+
+          const resultRetry = await session.sendMessage(fullErrorMessage);
+          const responseTextRetry = resultRetry.response.text();
+          console.log({ responseTextRetry });
+
+          let sqlQuery: string = responseTextRetry;
+          sqlQuery = this.removeInnerSingleQuotes(sqlQuery);
+          sqlQuery = this.removeCodeFencing(sqlQuery);
+          sqlQuery =
+            this.replaceDoubleBackslashesForSingleBackslashes(sqlQuery);
+          sqlQuery = this.replaceDoubleQuoteForSingleQuote(sqlQuery);
+          console.log({ sqlQuery });
+        }
+      }
+
+      if (response === null) {
+        return res
+          .status(500)
+          .send({ error: "Could not generate a response", sqlQuery });
+      }
+
+      return res.status(200).send({ response, sqlQuery });
     } catch (error) {
       console.error("Error:", error);
       return res
@@ -50,11 +85,23 @@ class GenerateResponseController {
   };
 
   private removeInnerSingleQuotes(str: string): string {
+    // eg. Cho'Gath -> ChoGath
     return str.replace(/(?<=[a-zA-Z])'(?=[a-zA-Z])/g, "");
   }
 
   private removeCodeFencing(str: string): string {
-    return str.replace(/^```[\w+]*\n([\s\S]*?)\n```$/gm, "$1");
+    // eg. ```sql bla bla ``` -> bla bla
+    return str.replace(/^\s*```[\w+]*\n([\s\S]*?)\n\s*```\s*$/gm, "$1");
+  }
+
+  private replaceDoubleBackslashesForSingleBackslashes(str: string): string {
+    // eg. Cho\\'Gath -> Cho\'Gath
+    return str.replace(/\\\\/g, "\\");
+  }
+
+  private replaceDoubleQuoteForSingleQuote(str: string): string {
+    // eg. Cho''Gath -> Cho'Gath
+    return str.replace(/''/g, "'");
   }
 
   private constructPrompt(

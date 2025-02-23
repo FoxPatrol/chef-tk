@@ -27,16 +27,18 @@ export default class DatabaseConnector {
   }
 
   async query(stmt: string) {
-    try {
-      if (!this.isConnected) {
-        await this.connect();
-      }
-      const res = await this.client.query(stmt);
-      return res.rows; // Return the fetched rows
-    } catch (error) {
-      console.error("Error executing query", error);
-      return []; // Return an empty array in case of error
+    //try {
+    if (!this.isConnected) {
+      await this.connect();
     }
+    const res = await this.client.query(stmt);
+    return res.rows; // Return the fetched rows
+
+    // let user handle error
+    //} catch (error) {
+    //  console.error("Error executing query", error);
+    //  return []; // Return an empty array in case of error
+    //}
   }
 
   async disconnect() {

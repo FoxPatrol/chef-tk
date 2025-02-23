@@ -21,7 +21,8 @@
       "@utils/*": ["utils/*"],
       "@db/*": ["db/*"],
       "@routes/*": ["routes/*"],
-      "@controllers/*": ["controllers/*"]
+      "@controllers/*": ["controllers/*"],
+      "@models/*": ["models/*"]
     }
   },
   "include": ["src/**/*"],
