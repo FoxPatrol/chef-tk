@@ -17,3 +17,9 @@
 # Fill Database
 
 Call the endpoint `http://localhost:3000/api/:region/matches/by-riot-id/:name/:tag?forceRefresh=true`
+
+# TODO
+
+- [ ] Get context of needs before asking for sql query
+- [ ] Add post data retrieval analysis (eg. will go over the data fetched to draw conclusions)
+- [ ] Clean up models (remove useless columns and add comments to useful ones)
