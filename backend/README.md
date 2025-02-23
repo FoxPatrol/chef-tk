@@ -20,6 +20,7 @@ Call the endpoint `http://localhost:3000/api/:region/matches/by-riot-id/:name/:t
 
 # TODO
 
+- [x] Answer a simple question by querying the database and returning the data
 - [ ] Get context of needs before asking for sql query
 - [ ] Add post data retrieval analysis (eg. will go over the data fetched to draw conclusions)
 - [ ] Clean up models (remove useless columns and add comments to useful ones)
