@@ -34,10 +34,15 @@ const generationConfig: GenerationConfig = {
   responseSchema: responseSchema,
 };
 
-export const model = genAI.getGenerativeModel({
+export const sqlModel = genAI.getGenerativeModel({
   //model: "gemini-1.5-pro",
   model: "gemini-2.0-flash-thinking-exp-01-21",
   generationConfig,
+});
+
+export const textModel = genAI.getGenerativeModel({
+  //model: "gemini-1.5-pro",
+  model: "gemini-2.0-flash-thinking-exp-01-21",
 });
 
 /*

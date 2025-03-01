@@ -112,6 +112,7 @@ class MatchesController {
 
           if (existingMatch.length > 0) {
             // already exists in db, no need to request
+            console.log(`${newMatchId} already in database, skipping...`);
             continue;
           }
 
